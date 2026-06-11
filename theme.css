@@ -1,0 +1,1039 @@
+/* ==========================================================================
+   HAWKINS — A cinema-grade Stranger Things theme for Obsidian
+   Version: 1.0.0 | Author: Danny
+
+   INSTALL: iCloud/iPad users — keep this vault "pinned"/fully downloaded
+   so theme files aren't evicted from local storage (Files app > vault
+   folder should show the "downloaded" icon, not the cloud icon).
+
+   ACCENT: leave Obsidian's Accent Color setting on "Default". This theme
+   wires --accent-h/-s/-l to the Hawkins display red (#ef4135) AND sets
+   explicit --interactive-accent / --text-accent overrides, so the
+   palette stays correct even if the accent picker is later changed.
+
+   GRAIN OVERLAY (.hawkins-grain) — opt-in, OFF by default. Add the class
+   "hawkins-grain" to <body> via a CSS snippet or the Style Settings
+   plugin to enable a faint scanline texture, scoped to
+   .workspace-leaf-content, <=2.5% opacity, pointer-events: none,
+   disabled on mobile/narrow viewports.
+   ========================================================================== */
+
+/* ==========================================================================
+   1. DARK MODE — "The Upside Down" (primary art-directed grade)
+   ========================================================================== */
+
+.theme-dark {
+  /* --------------------------------------------------------------------
+     Hawkins internal tokens (defined once, reused below)
+     -------------------------------------------------------------------- */
+  --hawkins-black: #010102;
+  --hawkins-bg: #0d0d12;
+  --hawkins-bg-alt: #010102;
+  --hawkins-bg-secondary: #121218;
+  --hawkins-bg-secondary-alt: #16161d;
+  --hawkins-bg-tertiary: #1a1a22;
+  --hawkins-border: #23232b;
+  --hawkins-border-hover: #34343f;
+  --hawkins-border-focus: #44444f;
+
+  --hawkins-text-normal: #e8e4df;
+  --hawkins-text-muted: #8a8693;
+  --hawkins-text-faint: #5c5864;
+
+  --hawkins-display-red: #ef4135;
+  --hawkins-text-red: #f4756c;
+  --hawkins-text-red-hover: #f79189;
+  --hawkins-red-hover-fill: #f25c51;
+  --hawkins-cyan: #03aeef;
+
+  --hawkins-glow-red: rgba(236, 32, 36, 0.35);
+  --hawkins-selection: rgba(236, 32, 36, 0.25);
+  --hawkins-highlight: rgba(236, 32, 36, 0.22);
+  --hawkins-active-line: rgba(236, 32, 36, 0.04);
+
+  --hawkins-callout-red-rgb: 239, 65, 53;
+  --hawkins-callout-cyan-rgb: 3, 174, 239;
+  --hawkins-callout-amber-rgb: 224, 158, 62;
+  --hawkins-callout-muted-rgb: 138, 134, 147;
+
+  /* Official ST palette — used for the graph view backdrop + grain
+     overlay. Background stays black/red; blue/green/indigo are
+     reserved for sparse "portal" accent specks in the starfield. */
+  --hawkins-st-red: #ff1515;       /* iconic ST title red — glow/halo/focus */
+  --hawkins-st-void: #1e0707;      /* warm near-black void — backdrop base */
+  --hawkins-st-ember: #3d1010;     /* red/void blend — unresolved nodes, inner vignette */
+  --hawkins-st-blue: #3a5fe5;      /* portal accent specks */
+  --hawkins-st-indigo: #1e193c;    /* portal accent specks */
+  --hawkins-st-green: #073e1e;     /* portal accent specks */
+
+  /* --------------------------------------------------------------------
+     2. FOUNDATIONS — backgrounds, borders, text, accent wiring
+     -------------------------------------------------------------------- */
+
+  /* Backgrounds */
+  --background-primary: var(--hawkins-bg);
+  --background-primary-alt: var(--hawkins-bg-alt);
+  --background-secondary: var(--hawkins-bg-secondary);
+  --background-secondary-alt: var(--hawkins-bg-secondary-alt);
+
+  /* Modifier states */
+  --background-modifier-border: var(--hawkins-border);
+  --background-modifier-border-hover: var(--hawkins-border-hover);
+  --background-modifier-border-focus: var(--hawkins-border-focus);
+  --background-modifier-hover: rgba(255, 255, 255, 0.035);
+  --background-modifier-active-hover: rgba(239, 65, 53, 0.12);
+  --background-modifier-form-field: var(--hawkins-bg-alt);
+  --background-modifier-error: rgba(239, 65, 53, 0.2);
+  --background-modifier-error-hover: rgba(239, 65, 53, 0.3);
+  --background-modifier-error-rgb: var(--hawkins-callout-red-rgb);
+  --background-modifier-success: rgba(3, 174, 239, 0.18);
+  --background-modifier-success-rgb: var(--hawkins-callout-cyan-rgb);
+  --background-modifier-message: rgba(13, 13, 18, 0.9);
+
+  /* Text */
+  --text-normal: var(--hawkins-text-normal);
+  --text-muted: var(--hawkins-text-muted);
+  --text-faint: var(--hawkins-text-faint);
+  --text-success: var(--hawkins-cyan);
+  --text-warning: #e09e3e;
+  --text-error: var(--hawkins-display-red);
+
+  /* Accent system — HSL wiring (drives default accent picker math) */
+  --accent-h: 4;
+  --accent-s: 85%;
+  --accent-l: 57%;
+
+  /* Explicit derived accent overrides — survive accent-picker changes */
+  --interactive-accent: var(--hawkins-display-red);
+  --interactive-accent-hsl: 4, 85%, 57%;
+  --interactive-accent-hover: var(--hawkins-red-hover-fill);
+  --text-accent: var(--hawkins-text-red);
+  --text-accent-hover: var(--hawkins-text-red-hover);
+  --text-on-accent: var(--hawkins-black);
+  --text-on-accent-inverted: var(--hawkins-text-normal);
+
+  /* Selection + highlight + caret */
+  --text-selection: var(--hawkins-selection);
+  --text-highlight-bg: var(--hawkins-highlight);
+  --caret-color: var(--hawkins-text-red);
+
+  /* Interactive surfaces */
+  --interactive-normal: var(--hawkins-bg-secondary-alt);
+  --interactive-hover: var(--hawkins-bg-tertiary);
+
+  /* Divider */
+  --divider-color: var(--hawkins-border);
+  --divider-color-hover: var(--hawkins-border-hover);
+
+  /* --------------------------------------------------------------------
+     3. TYPOGRAPHY — local font stacks only, condensed display headings
+     -------------------------------------------------------------------- */
+
+  --font-text-theme: "Iowan Old Style", "Charter", "Georgia", "Times New Roman", serif;
+  --font-interface-theme: -apple-system, "Segoe UI", "Helvetica Neue", "Arial", sans-serif;
+  --font-monospace-theme: "SF Mono", "Cascadia Code", "Consolas", "Menlo", monospace;
+
+  --heading-formatting: var(--hawkins-text-red);
+
+  /* Condensed display feel for headings */
+  --h1-font: "Avenir Next Condensed", "Arial Narrow", "Helvetica Neue", sans-serif;
+  --h2-font: "Avenir Next Condensed", "Arial Narrow", "Helvetica Neue", sans-serif;
+  --h3-font: "Avenir Next Condensed", "Arial Narrow", "Helvetica Neue", sans-serif;
+  --h4-font: var(--font-interface-theme);
+  --h5-font: var(--font-interface-theme);
+  --h6-font: var(--font-interface-theme);
+
+  --h1-color: var(--hawkins-text-red);
+  --h2-color: var(--hawkins-text-red);
+  --h3-color: #d8c9c5;
+  --h4-color: #cfc4c0;
+  --h5-color: var(--hawkins-text-normal);
+  --h6-color: var(--hawkins-text-muted);
+
+  --h1-weight: 700;
+  --h2-weight: 700;
+  --h3-weight: 600;
+  --h4-weight: 600;
+  --h5-weight: 600;
+  --h6-weight: 600;
+
+  /* Inline title matches h1 */
+  --inline-title-color: var(--hawkins-text-red);
+  --inline-title-font: var(--h1-font);
+  --inline-title-weight: 700;
+
+  /* --------------------------------------------------------------------
+     4. EDITOR — links, emphasis, blockquotes, code, tags, hr, footnotes
+     -------------------------------------------------------------------- */
+
+  /* Links */
+  --link-color: var(--hawkins-text-red);
+  --link-color-hover: var(--hawkins-text-red-hover);
+  --link-decoration: none;
+  --link-decoration-hover: underline;
+  --link-external-color: var(--hawkins-cyan);
+  --link-external-color-hover: #4cc8ff;
+  --link-external-decoration: none;
+  --link-external-decoration-hover: underline;
+
+  /* Unresolved links — muted red, desaturated */
+  --link-unresolved-color: #9e6b67;
+  --link-unresolved-opacity: 0.7;
+  --link-unresolved-filter: none;
+  --link-unresolved-decoration-color: rgba(158, 107, 103, 0.5);
+
+  /* Emphasis */
+  --bold-color: #fdfaf6;
+  --italic-color: #cfc4c0;
+
+  /* Blockquotes */
+  --blockquote-border-color: var(--hawkins-display-red);
+  --blockquote-background-color: rgba(239, 65, 53, 0.06);
+  --blockquote-color: var(--hawkins-text-muted);
+  --blockquote-font-style: italic;
+
+  /* Code */
+  --code-background: var(--hawkins-bg-alt);
+  --code-normal: var(--hawkins-text-normal);
+  --code-size: 0.85em;
+
+  /* Tags — cyan pills */
+  --tag-color: var(--hawkins-cyan);
+  --tag-color-hover: #4cc8ff;
+  --tag-background: rgba(3, 174, 239, 0.1);
+  --tag-background-hover: rgba(3, 174, 239, 0.18);
+  --tag-border-color: rgba(3, 174, 239, 0.25);
+  --tag-border-color-hover: rgba(3, 174, 239, 0.4);
+  --tag-border-width: 1px;
+  --tag-radius: 12px;
+  --tag-padding-x: 0.65em;
+  --tag-padding-y: 0.15em;
+
+  /* Horizontal rule */
+  --hr-color: var(--hawkins-border);
+  --hr-thickness: 2px;
+
+  /* Footnotes */
+  --footnote-size: 0.75em;
+
+  /* --------------------------------------------------------------------
+     5. TABLES
+     -------------------------------------------------------------------- */
+  --table-header-background: var(--hawkins-bg-secondary-alt);
+  --table-header-background-hover: var(--hawkins-bg-tertiary);
+  --table-row-alt-background: rgba(255, 255, 255, 0.02);
+  --table-row-alt-background-hover: rgba(255, 255, 255, 0.045);
+  --table-border-color: var(--hawkins-border);
+  --table-header-border-color: var(--hawkins-border-hover);
+  --table-selection: rgba(239, 65, 53, 0.12);
+  --table-selection-border-color: var(--hawkins-display-red);
+
+  /* --------------------------------------------------------------------
+     6. CHECKBOXES / TASK LISTS
+     -------------------------------------------------------------------- */
+  --checkbox-color: var(--hawkins-display-red);
+  --checkbox-color-hover: var(--hawkins-red-hover-fill);
+  --checkbox-border-color: var(--hawkins-border-hover);
+  --checkbox-border-color-hover: var(--hawkins-display-red);
+  --checkbox-marker-color: var(--hawkins-black);
+  --checklist-done-color: var(--hawkins-text-faint);
+
+  /* --------------------------------------------------------------------
+     7. UI CHROME — tabs, sidebar, status bar, ribbon, titlebar
+     -------------------------------------------------------------------- */
+
+  /* Tabs */
+  --tab-text-color: var(--hawkins-text-muted);
+  --tab-text-color-active: var(--hawkins-text-normal);
+  --tab-text-color-focused: var(--hawkins-text-muted);
+  --tab-text-color-focused-active: var(--hawkins-text-red);
+  --tab-text-color-focused-highlighted: var(--hawkins-text-red);
+  --tab-text-color-focused-active-current: var(--hawkins-text-red);
+  --tab-container-background: var(--hawkins-bg-secondary);
+  --tab-background-active: var(--hawkins-bg);
+
+  /* Status bar */
+  --status-bar-background: var(--hawkins-bg-secondary);
+  --status-bar-text-color: var(--hawkins-text-muted);
+  --status-bar-border-color: var(--hawkins-border);
+  --status-bar-border-width: 1px 0 0 0;
+
+  /* Ribbon */
+  --ribbon-background: var(--hawkins-bg-secondary);
+  --ribbon-background-collapsed: var(--hawkins-bg-secondary);
+
+  /* Window / titlebar */
+  --titlebar-background: var(--hawkins-bg-secondary);
+  --titlebar-background-focused: var(--hawkins-bg);
+  --titlebar-text-color: var(--hawkins-text-muted);
+  --titlebar-text-color-focused: var(--hawkins-text-normal);
+  --titlebar-border-width: 1px;
+  --titlebar-border-color: var(--hawkins-border);
+
+  /* Navigation / file explorer */
+  --nav-item-color: var(--hawkins-text-muted);
+  --nav-item-color-hover: var(--hawkins-text-normal);
+  --nav-item-color-active: var(--hawkins-text-normal);
+  --nav-item-color-selected: var(--hawkins-text-red);
+  --nav-item-color-highlighted: var(--hawkins-cyan);
+  --nav-item-background-hover: rgba(255, 255, 255, 0.04);
+  --nav-item-background-active: rgba(239, 65, 53, 0.1);
+  --nav-item-background-selected: rgba(239, 65, 53, 0.14);
+
+  /* --------------------------------------------------------------------
+     8. PROPERTIES / METADATA PANEL
+     -------------------------------------------------------------------- */
+  --metadata-background: transparent;
+  --metadata-property-background: transparent;
+  --metadata-property-background-hover: rgba(255, 255, 255, 0.035);
+  --metadata-property-background-active: rgba(239, 65, 53, 0.1);
+  --metadata-input-background: var(--hawkins-bg-secondary-alt);
+  --metadata-input-background-hover: var(--hawkins-bg-tertiary);
+  --metadata-input-background-active: var(--hawkins-bg-tertiary);
+  --metadata-label-text-color: var(--hawkins-text-muted);
+  --metadata-label-text-color-hover: var(--hawkins-text-normal);
+  --metadata-divider-color: var(--hawkins-border);
+  --metadata-divider-color-hover: var(--hawkins-border-hover);
+  --metadata-divider-color-focus: var(--hawkins-display-red);
+
+  /* --------------------------------------------------------------------
+     11. MODALS & SETTINGS
+     -------------------------------------------------------------------- */
+  --modal-background: var(--hawkins-bg-secondary);
+  --modal-border-color: var(--hawkins-border);
+  --modal-border-width: 1px;
+
+  /* --------------------------------------------------------------------
+     12. SCROLLBARS
+     -------------------------------------------------------------------- */
+  --scrollbar-bg: transparent;
+  --scrollbar-thumb-bg: var(--hawkins-border-hover);
+  --scrollbar-active-thumb-bg: var(--hawkins-display-red);
+
+  /* --------------------------------------------------------------------
+     16. ACTIVE LINE / INDENTATION GUIDES
+     -------------------------------------------------------------------- */
+  --indentation-guide-color: var(--hawkins-border);
+  --indentation-guide-color-active: var(--hawkins-display-red);
+}
+
+/* ==========================================================================
+   1b. DARK MODE — components that need real selectors (not bare vars)
+   ========================================================================== */
+
+/* Hover popovers / page preview */
+.theme-dark .popover.hover-popover {
+  background-color: var(--hawkins-bg-secondary-alt);
+  border: 1px solid var(--hawkins-border);
+  box-shadow: 0 8px 28px rgba(1, 1, 2, 0.55);
+}
+
+/* Command palette / quick switcher / suggestion lists */
+.theme-dark .prompt {
+  background-color: var(--hawkins-bg-secondary-alt);
+  border: 1px solid var(--hawkins-border-hover);
+  box-shadow: 0 8px 28px rgba(1, 1, 2, 0.6);
+}
+
+.theme-dark .prompt-input-container {
+  border-bottom: 1px solid var(--hawkins-border);
+}
+
+.theme-dark .suggestion-item.is-selected,
+.theme-dark .suggestion-item:hover {
+  background-color: rgba(239, 65, 53, 0.12);
+  color: var(--hawkins-text-normal);
+}
+
+.theme-dark .suggestion-highlight {
+  color: var(--hawkins-text-red);
+}
+
+/* Active line highlight in editor (Live Preview / source mode) */
+.theme-dark .cm-active.cm-line,
+.theme-dark .markdown-source-view.mod-cm6 .cm-active {
+  background-color: var(--hawkins-active-line);
+}
+
+.theme-dark .HyperMD-codeblock.cm-active {
+  background-color: transparent;
+}
+
+/* --------------------------------------------------------------------
+   GRAPH VIEW — "Upside Down" constellation, official ST palette
+   Black + red core (radial vignette + halo glow), with sparse
+   blue/indigo/green "portal" specks in the starfield for variety.
+   Glow is desktop-only.
+   -------------------------------------------------------------------- */
+.theme-dark {
+  --graph-node: #f3d9d5;
+  --graph-node-unresolved: var(--hawkins-st-ember);
+  --graph-node-focused: var(--hawkins-st-red);
+  --graph-node-tag: var(--hawkins-cyan);
+  --graph-node-attachment: #e09e3e;
+  --graph-line: rgba(255, 21, 21, 0.18);
+  --graph-text: #cfc8c4;
+}
+
+/* Graded backdrop + starfield (tiled radial-gradient specks) */
+.theme-dark .workspace-leaf-content[data-type="graph"] .view-content,
+.theme-dark .workspace-leaf-content[data-type="localgraph"] .view-content {
+  background-color: var(--hawkins-st-void);
+  background-image:
+    radial-gradient(1.5px 1.5px at 13% 21%, rgba(254, 254, 254, 0.50), transparent),
+    radial-gradient(1px 1px at 67% 9%,  rgba(254, 254, 254, 0.38), transparent),
+    radial-gradient(1px 1px at 41% 63%, rgba(254, 254, 254, 0.30), transparent),
+    radial-gradient(1.5px 1.5px at 86% 47%, var(--hawkins-st-blue), transparent),
+    radial-gradient(1px 1px at 24% 84%, rgba(254, 254, 254, 0.26), transparent),
+    radial-gradient(1px 1px at 92% 78%, var(--hawkins-st-indigo), transparent),
+    radial-gradient(1px 1px at 8% 64%,  var(--hawkins-st-green), transparent),
+    radial-gradient(1px 1px at 55% 36%, rgba(254, 254, 254, 0.20), transparent),
+    radial-gradient(ellipse at 50% 38%, var(--hawkins-st-ember) 0%, #2a0a0a 45%, var(--hawkins-st-void) 100%);
+  background-size:
+    260px 260px, 260px 260px, 260px 260px, 260px 260px,
+    260px 260px, 260px 260px, 260px 260px, 260px 260px, cover;
+  background-repeat: repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, no-repeat;
+}
+
+/* Node/line halo — the graph renders on a transparent canvas, so
+   drop-shadow halos every drawn pixel. GPU filter: desktop only. */
+body.theme-dark:not(.is-mobile) .workspace-leaf-content[data-type="graph"] canvas,
+body.theme-dark:not(.is-mobile) .workspace-leaf-content[data-type="localgraph"] canvas {
+  filter:
+    drop-shadow(0 0 3px rgba(243, 217, 213, 0.55))
+    drop-shadow(0 0 10px rgba(255, 21, 21, 0.40))
+    drop-shadow(0 0 26px rgba(255, 21, 21, 0.18));
+}
+
+/* Graph controls panel — keep legible over the dark backdrop */
+.theme-dark .workspace-leaf-content[data-type="graph"] .graph-controls {
+  background-color: rgba(13, 13, 18, 0.88);
+  border: 1px solid var(--hawkins-border);
+}
+
+/* --------------------------------------------------------------------
+   CANVAS
+   -------------------------------------------------------------------- */
+.theme-dark {
+  --canvas-background: var(--hawkins-bg);
+  --canvas-dot-pattern: var(--hawkins-border);
+  --canvas-card-label-color: var(--hawkins-text-muted);
+
+  --canvas-color-1: var(--hawkins-display-red);
+  --canvas-color-2: #e09e3e;
+  --canvas-color-3: #e3d568;
+  --canvas-color-4: #6fcf97;
+  --canvas-color-5: var(--hawkins-cyan);
+  --canvas-color-6: #b58cf2;
+}
+
+.theme-dark .canvas-node-container {
+  background-color: var(--hawkins-bg-secondary-alt);
+  border-color: var(--hawkins-border);
+}
+
+/* --------------------------------------------------------------------
+   CALLOUTS — remapped to the Hawkins palette (RGB triplets)
+   -------------------------------------------------------------------- */
+.theme-dark {
+  --callout-default: var(--hawkins-callout-cyan-rgb);
+  --callout-note: var(--hawkins-callout-cyan-rgb);
+  --callout-info: var(--hawkins-callout-cyan-rgb);
+  --callout-todo: var(--hawkins-callout-cyan-rgb);
+  --callout-tip: var(--hawkins-callout-cyan-rgb);
+  --callout-success: 111, 207, 151;
+  --callout-question: var(--hawkins-callout-amber-rgb);
+  --callout-warning: var(--hawkins-callout-amber-rgb);
+  --callout-attention: var(--hawkins-callout-amber-rgb);
+  --callout-failure: var(--hawkins-callout-red-rgb);
+  --callout-danger: var(--hawkins-callout-red-rgb);
+  --callout-error: var(--hawkins-callout-red-rgb);
+  --callout-bug: var(--hawkins-callout-red-rgb);
+  --callout-example: 181, 140, 242;
+  --callout-quote: var(--hawkins-callout-muted-rgb);
+  --callout-cite: var(--hawkins-callout-muted-rgb);
+  --callout-abstract: var(--hawkins-callout-cyan-rgb);
+  --callout-summary: var(--hawkins-callout-cyan-rgb);
+  --callout-tldr: var(--hawkins-callout-cyan-rgb);
+  --callout-important: var(--hawkins-callout-red-rgb);
+
+  --callout-radius: 6px;
+  --callout-border-width: 0 0 0 3px;
+  --callout-border-opacity: 0.6;
+  --callout-content-background: rgba(255, 255, 255, 0.015);
+}
+
+/* ==========================================================================
+   1c. HEADING GLOW (dark mode only) — h1 + inline-title ONLY
+   ========================================================================== */
+
+.theme-dark .markdown-preview-view h1,
+.theme-dark .markdown-source-view .HyperMD-header-1,
+.theme-dark .inline-title {
+  text-shadow: 0 0 6px rgba(236, 32, 36, 0.35);
+}
+
+/* No glow on h2-h6, body text, or code */
+.theme-dark h2,
+.theme-dark h3,
+.theme-dark h4,
+.theme-dark h5,
+.theme-dark h6,
+.theme-dark code,
+.theme-dark pre {
+  text-shadow: none;
+}
+
+/* ==========================================================================
+   2. LIGHT MODE — minimal, correct, desaturated fallback
+   ========================================================================== */
+
+.theme-light {
+  /* --------------------------------------------------------------------
+     Hawkins internal tokens (light)
+     -------------------------------------------------------------------- */
+  --hawkins-light-bg: #fefefe;
+  --hawkins-light-bg-secondary: #e6e6e6;
+  --hawkins-light-bg-alt: #f5f5f5;
+  --hawkins-light-border: #d4d4d4;
+  --hawkins-light-border-hover: #bdbdbd;
+
+  --hawkins-light-text: #1a1a1a;
+  --hawkins-light-text-muted: #545454;
+  --hawkins-light-text-faint: #808080;
+
+  --hawkins-light-red: #c5281d;
+  --hawkins-light-red-hover: #a82017;
+  --hawkins-light-cyan: #0277a3;
+  --hawkins-light-cyan-hover: #025d80;
+
+  --hawkins-light-selection: rgba(197, 40, 29, 0.16);
+  --hawkins-light-highlight: rgba(197, 40, 29, 0.16);
+
+  --hawkins-callout-red-rgb: 197, 40, 29;
+  --hawkins-callout-cyan-rgb: 2, 119, 163;
+  --hawkins-callout-amber-rgb: 176, 110, 12;
+  --hawkins-callout-muted-rgb: 84, 84, 84;
+
+  /* --------------------------------------------------------------------
+     FOUNDATIONS
+     -------------------------------------------------------------------- */
+  --background-primary: var(--hawkins-light-bg);
+  --background-primary-alt: var(--hawkins-light-bg-alt);
+  --background-secondary: var(--hawkins-light-bg-secondary);
+  --background-secondary-alt: #ededed;
+
+  --background-modifier-border: var(--hawkins-light-border);
+  --background-modifier-border-hover: var(--hawkins-light-border-hover);
+  --background-modifier-border-focus: var(--hawkins-light-red);
+  --background-modifier-hover: rgba(0, 0, 0, 0.035);
+  --background-modifier-active-hover: rgba(197, 40, 29, 0.08);
+  --background-modifier-form-field: var(--hawkins-light-bg);
+  --background-modifier-error: rgba(197, 40, 29, 0.15);
+  --background-modifier-error-hover: rgba(197, 40, 29, 0.25);
+  --background-modifier-error-rgb: var(--hawkins-callout-red-rgb);
+  --background-modifier-success: rgba(2, 119, 163, 0.12);
+  --background-modifier-success-rgb: var(--hawkins-callout-cyan-rgb);
+  --background-modifier-message: rgba(255, 255, 255, 0.95);
+
+  --text-normal: var(--hawkins-light-text);
+  --text-muted: var(--hawkins-light-text-muted);
+  --text-faint: var(--hawkins-light-text-faint);
+  --text-success: var(--hawkins-light-cyan);
+  --text-warning: #b06e0c;
+  --text-error: var(--hawkins-light-red);
+
+  /* Accent wiring — same red, darkened for light backgrounds */
+  --accent-h: 5;
+  --accent-s: 73%;
+  --accent-l: 44%;
+
+  --interactive-accent: #ef4135;
+  --interactive-accent-hsl: 4, 85%, 57%;
+  --interactive-accent-hover: var(--hawkins-light-red-hover);
+  --text-accent: var(--hawkins-light-red);
+  --text-accent-hover: var(--hawkins-light-red-hover);
+  --text-on-accent: #ffffff;
+  --text-on-accent-inverted: var(--hawkins-light-text);
+
+  --text-selection: var(--hawkins-light-selection);
+  --text-highlight-bg: var(--hawkins-light-highlight);
+  --caret-color: var(--hawkins-light-red);
+
+  --interactive-normal: var(--hawkins-light-bg-secondary);
+  --interactive-hover: var(--hawkins-light-border);
+
+  --divider-color: var(--hawkins-light-border);
+  --divider-color-hover: var(--hawkins-light-border-hover);
+
+  /* --------------------------------------------------------------------
+     TYPOGRAPHY (shared stacks; same font choices as dark)
+     -------------------------------------------------------------------- */
+  --font-text-theme: "Iowan Old Style", "Charter", "Georgia", "Times New Roman", serif;
+  --font-interface-theme: -apple-system, "Segoe UI", "Helvetica Neue", "Arial", sans-serif;
+  --font-monospace-theme: "SF Mono", "Cascadia Code", "Consolas", "Menlo", monospace;
+
+  --heading-formatting: var(--hawkins-light-red);
+
+  --h1-font: "Avenir Next Condensed", "Arial Narrow", "Helvetica Neue", sans-serif;
+  --h2-font: "Avenir Next Condensed", "Arial Narrow", "Helvetica Neue", sans-serif;
+  --h3-font: "Avenir Next Condensed", "Arial Narrow", "Helvetica Neue", sans-serif;
+  --h4-font: var(--font-interface-theme);
+  --h5-font: var(--font-interface-theme);
+  --h6-font: var(--font-interface-theme);
+
+  --h1-color: var(--hawkins-light-red);
+  --h2-color: var(--hawkins-light-red);
+  --h3-color: #2b2b2b;
+  --h4-color: #353535;
+  --h5-color: var(--hawkins-light-text);
+  --h6-color: var(--hawkins-light-text-muted);
+
+  --h1-weight: 700;
+  --h2-weight: 700;
+  --h3-weight: 600;
+  --h4-weight: 600;
+  --h5-weight: 600;
+  --h6-weight: 600;
+
+  --inline-title-color: var(--hawkins-light-red);
+  --inline-title-font: var(--h1-font);
+  --inline-title-weight: 700;
+
+  /* --------------------------------------------------------------------
+     EDITOR
+     -------------------------------------------------------------------- */
+  --link-color: var(--hawkins-light-red);
+  --link-color-hover: var(--hawkins-light-red-hover);
+  --link-decoration: none;
+  --link-decoration-hover: underline;
+  --link-external-color: var(--hawkins-light-cyan);
+  --link-external-color-hover: var(--hawkins-light-cyan-hover);
+  --link-external-decoration: none;
+  --link-external-decoration-hover: underline;
+
+  --link-unresolved-color: #b5685f;
+  --link-unresolved-opacity: 0.7;
+  --link-unresolved-filter: none;
+  --link-unresolved-decoration-color: rgba(181, 104, 95, 0.5);
+
+  --bold-color: #0d0d0d;
+  --italic-color: #3a3a3a;
+
+  --blockquote-border-color: var(--hawkins-light-red);
+  --blockquote-background-color: rgba(197, 40, 29, 0.05);
+  --blockquote-color: var(--hawkins-light-text-muted);
+  --blockquote-font-style: italic;
+
+  --code-background: var(--hawkins-light-bg-secondary);
+  --code-normal: #2b2b2b;
+  --code-size: 0.85em;
+
+  --tag-color: var(--hawkins-light-cyan);
+  --tag-color-hover: var(--hawkins-light-cyan-hover);
+  --tag-background: rgba(2, 119, 163, 0.08);
+  --tag-background-hover: rgba(2, 119, 163, 0.15);
+  --tag-border-color: rgba(2, 119, 163, 0.25);
+  --tag-border-color-hover: rgba(2, 119, 163, 0.4);
+  --tag-border-width: 1px;
+  --tag-radius: 12px;
+  --tag-padding-x: 0.65em;
+  --tag-padding-y: 0.15em;
+
+  --hr-color: var(--hawkins-light-border);
+  --hr-thickness: 2px;
+
+  --footnote-size: 0.75em;
+
+  /* --------------------------------------------------------------------
+     TABLES
+     -------------------------------------------------------------------- */
+  --table-header-background: var(--hawkins-light-bg-secondary);
+  --table-header-background-hover: var(--hawkins-light-border);
+  --table-row-alt-background: rgba(0, 0, 0, 0.018);
+  --table-row-alt-background-hover: rgba(0, 0, 0, 0.04);
+  --table-border-color: var(--hawkins-light-border);
+  --table-header-border-color: var(--hawkins-light-border-hover);
+  --table-selection: rgba(197, 40, 29, 0.08);
+  --table-selection-border-color: var(--hawkins-light-red);
+
+  /* --------------------------------------------------------------------
+     CHECKBOXES
+     -------------------------------------------------------------------- */
+  --checkbox-color: var(--hawkins-light-red);
+  --checkbox-color-hover: var(--hawkins-light-red-hover);
+  --checkbox-border-color: var(--hawkins-light-border-hover);
+  --checkbox-border-color-hover: var(--hawkins-light-red);
+  --checkbox-marker-color: #ffffff;
+  --checklist-done-color: var(--hawkins-light-text-faint);
+
+  /* --------------------------------------------------------------------
+     UI CHROME
+     -------------------------------------------------------------------- */
+  --tab-text-color: var(--hawkins-light-text-muted);
+  --tab-text-color-active: var(--hawkins-light-text);
+  --tab-text-color-focused: var(--hawkins-light-text-muted);
+  --tab-text-color-focused-active: var(--hawkins-light-red);
+  --tab-text-color-focused-highlighted: var(--hawkins-light-red);
+  --tab-text-color-focused-active-current: var(--hawkins-light-red);
+  --tab-container-background: var(--hawkins-light-bg-secondary);
+  --tab-background-active: var(--hawkins-light-bg);
+
+  --status-bar-background: var(--hawkins-light-bg-secondary);
+  --status-bar-text-color: var(--hawkins-light-text-muted);
+  --status-bar-border-color: var(--hawkins-light-border);
+  --status-bar-border-width: 1px 0 0 0;
+
+  --ribbon-background: var(--hawkins-light-bg-secondary);
+  --ribbon-background-collapsed: var(--hawkins-light-bg-secondary);
+
+  --titlebar-background: var(--hawkins-light-bg-secondary);
+  --titlebar-background-focused: var(--hawkins-light-bg);
+  --titlebar-text-color: var(--hawkins-light-text-muted);
+  --titlebar-text-color-focused: var(--hawkins-light-text);
+  --titlebar-border-width: 1px;
+  --titlebar-border-color: var(--hawkins-light-border);
+
+  --nav-item-color: var(--hawkins-light-text-muted);
+  --nav-item-color-hover: var(--hawkins-light-text);
+  --nav-item-color-active: var(--hawkins-light-text);
+  --nav-item-color-selected: var(--hawkins-light-red);
+  --nav-item-color-highlighted: var(--hawkins-light-cyan);
+  --nav-item-background-hover: rgba(0, 0, 0, 0.035);
+  --nav-item-background-active: rgba(197, 40, 29, 0.07);
+  --nav-item-background-selected: rgba(197, 40, 29, 0.1);
+
+  /* --------------------------------------------------------------------
+     PROPERTIES / METADATA PANEL
+     -------------------------------------------------------------------- */
+  --metadata-background: transparent;
+  --metadata-property-background: transparent;
+  --metadata-property-background-hover: rgba(0, 0, 0, 0.035);
+  --metadata-property-background-active: rgba(197, 40, 29, 0.07);
+  --metadata-input-background: var(--hawkins-light-bg-secondary);
+  --metadata-input-background-hover: var(--hawkins-light-border);
+  --metadata-input-background-active: var(--hawkins-light-border);
+  --metadata-label-text-color: var(--hawkins-light-text-muted);
+  --metadata-label-text-color-hover: var(--hawkins-light-text);
+  --metadata-divider-color: var(--hawkins-light-border);
+  --metadata-divider-color-hover: var(--hawkins-light-border-hover);
+  --metadata-divider-color-focus: var(--hawkins-light-red);
+
+  /* --------------------------------------------------------------------
+     MODALS & SETTINGS
+     -------------------------------------------------------------------- */
+  --modal-background: var(--hawkins-light-bg);
+  --modal-border-color: var(--hawkins-light-border);
+  --modal-border-width: 1px;
+
+  /* --------------------------------------------------------------------
+     SCROLLBARS
+     -------------------------------------------------------------------- */
+  --scrollbar-bg: transparent;
+  --scrollbar-thumb-bg: var(--hawkins-light-border-hover);
+  --scrollbar-active-thumb-bg: var(--hawkins-light-red);
+
+  /* --------------------------------------------------------------------
+     ACTIVE LINE / INDENTATION GUIDES
+     -------------------------------------------------------------------- */
+  --indentation-guide-color: var(--hawkins-light-border);
+  --indentation-guide-color-active: var(--hawkins-light-red);
+}
+
+/* ==========================================================================
+   2b. LIGHT MODE — components needing real selectors
+   ========================================================================== */
+
+.theme-light .popover.hover-popover {
+  background-color: var(--hawkins-light-bg);
+  border: 1px solid var(--hawkins-light-border);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+.theme-light .prompt {
+  background-color: var(--hawkins-light-bg);
+  border: 1px solid var(--hawkins-light-border);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.theme-light .prompt-input-container {
+  border-bottom: 1px solid var(--hawkins-light-border);
+}
+
+.theme-light .suggestion-item.is-selected,
+.theme-light .suggestion-item:hover {
+  background-color: rgba(197, 40, 29, 0.08);
+  color: var(--hawkins-light-text);
+}
+
+.theme-light .suggestion-highlight {
+  color: var(--hawkins-light-red);
+}
+
+.theme-light .cm-active.cm-line,
+.theme-light .markdown-source-view.mod-cm6 .cm-active {
+  background-color: rgba(197, 40, 29, 0.04);
+}
+
+.theme-light .HyperMD-codeblock.cm-active {
+  background-color: transparent;
+}
+
+/* No glow / no text-shadow in light mode anywhere */
+.theme-light h1,
+.theme-light h2,
+.theme-light h3,
+.theme-light h4,
+.theme-light h5,
+.theme-light h6,
+.theme-light .inline-title,
+.theme-light code,
+.theme-light pre {
+  text-shadow: none;
+}
+
+/* --------------------------------------------------------------------
+   GRAPH VIEW (light)
+   -------------------------------------------------------------------- */
+.theme-light {
+  --graph-node: var(--hawkins-light-text-muted);
+  --graph-node-unresolved: #c9a8a4;
+  --graph-node-focused: var(--hawkins-light-red);
+  --graph-node-tag: var(--hawkins-light-cyan);
+  --graph-node-attachment: #b06e0c;
+  --graph-line: var(--hawkins-light-border-hover);
+  --graph-text: var(--hawkins-light-text);
+}
+
+/* --------------------------------------------------------------------
+   CANVAS (light)
+   -------------------------------------------------------------------- */
+.theme-light {
+  --canvas-background: var(--hawkins-light-bg);
+  --canvas-dot-pattern: var(--hawkins-light-border);
+  --canvas-card-label-color: var(--hawkins-light-text-muted);
+
+  --canvas-color-1: var(--hawkins-light-red);
+  --canvas-color-2: #b06e0c;
+  --canvas-color-3: #a08a1f;
+  --canvas-color-4: #3f8f5c;
+  --canvas-color-5: var(--hawkins-light-cyan);
+  --canvas-color-6: #7a4fb5;
+}
+
+.theme-light .canvas-node-container {
+  background-color: var(--hawkins-light-bg);
+  border-color: var(--hawkins-light-border);
+}
+
+/* --------------------------------------------------------------------
+   CALLOUTS (light) — desaturated, AA-safe on white
+   -------------------------------------------------------------------- */
+.theme-light {
+  --callout-default: var(--hawkins-callout-cyan-rgb);
+  --callout-note: var(--hawkins-callout-cyan-rgb);
+  --callout-info: var(--hawkins-callout-cyan-rgb);
+  --callout-todo: var(--hawkins-callout-cyan-rgb);
+  --callout-tip: var(--hawkins-callout-cyan-rgb);
+  --callout-success: 63, 143, 92;
+  --callout-question: var(--hawkins-callout-amber-rgb);
+  --callout-warning: var(--hawkins-callout-amber-rgb);
+  --callout-attention: var(--hawkins-callout-amber-rgb);
+  --callout-failure: var(--hawkins-callout-red-rgb);
+  --callout-danger: var(--hawkins-callout-red-rgb);
+  --callout-error: var(--hawkins-callout-red-rgb);
+  --callout-bug: var(--hawkins-callout-red-rgb);
+  --callout-example: 122, 79, 181;
+  --callout-quote: var(--hawkins-callout-muted-rgb);
+  --callout-cite: var(--hawkins-callout-muted-rgb);
+  --callout-abstract: var(--hawkins-callout-cyan-rgb);
+  --callout-summary: var(--hawkins-callout-cyan-rgb);
+  --callout-tldr: var(--hawkins-callout-cyan-rgb);
+  --callout-important: var(--hawkins-callout-red-rgb);
+
+  --callout-radius: 6px;
+  --callout-border-width: 0 0 0 3px;
+  --callout-border-opacity: 0.5;
+  --callout-content-background: rgba(0, 0, 0, 0.012);
+}
+
+/* ==========================================================================
+   3. SHARED — typography refinements (both modes)
+   ========================================================================== */
+
+/* Condensed, slightly tracked-out display headings for h1/h2 */
+h1,
+.inline-title {
+  letter-spacing: 0.01em;
+  line-height: 1.15;
+}
+
+h2 {
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+}
+
+h3,
+h4,
+h5,
+h6 {
+  letter-spacing: 0.01em;
+}
+
+/* Inline code gets a cyan accent (separate from fenced code blocks) */
+.theme-dark :not(pre) > code {
+  color: var(--hawkins-cyan);
+  background-color: rgba(3, 174, 239, 0.08);
+  border-radius: 4px;
+}
+
+.theme-light :not(pre) > code {
+  color: var(--hawkins-light-cyan);
+  background-color: rgba(2, 119, 163, 0.06);
+  border-radius: 4px;
+}
+
+/* Fenced code blocks keep the deep-well background; let Obsidian's
+   default syntax token colors render on top (per spec, do not
+   override --code-comment / --code-keyword / etc.) */
+.theme-dark pre,
+.theme-dark pre code {
+  background-color: var(--code-background);
+}
+
+.theme-light pre,
+.theme-light pre code {
+  background-color: var(--code-background);
+}
+
+/* ==========================================================================
+   4. OPTIONAL TEXTURE — .hawkins-grain (default OFF)
+   Faint scanline texture + a "Bikes at Dusk" smoke/ember vignette wash,
+   layered over editor/preview leaves when the "hawkins-grain" class is
+   added to <body>. <=2.5% opacity, scoped to .workspace-leaf-content,
+   pointer-events: none, low z-index (below modals), disabled on mobile
+   and narrow viewports.
+   ========================================================================== */
+
+body.hawkins-grain .workspace-leaf-content {
+  position: relative;
+}
+
+body.hawkins-grain .workspace-leaf-content::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.05;
+  background-image: linear-gradient(
+    to bottom,
+    var(--hawkins-st-ember) 0%,
+    transparent 35%,
+    transparent 70%,
+    var(--hawkins-st-void) 100%
+  );
+  mix-blend-mode: soft-light;
+}
+
+body.hawkins-grain .workspace-leaf-content::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.025;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.6) 0px,
+    rgba(255, 255, 255, 0.6) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  mix-blend-mode: overlay;
+}
+
+/* Disable grain on mobile and narrow viewports */
+body.is-mobile.hawkins-grain .workspace-leaf-content::before,
+body.is-mobile.hawkins-grain .workspace-leaf-content::after {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  body.hawkins-grain .workspace-leaf-content::before,
+  body.hawkins-grain .workspace-leaf-content::after {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   5. ROBUSTNESS — print, reduced motion, mobile press states
+   ========================================================================== */
+
+/* Print: force light, legible output regardless of active theme */
+@media print {
+  body,
+  .theme-dark,
+  .theme-light {
+    --background-primary: #ffffff;
+    --background-primary-alt: #ffffff;
+    --background-secondary: #ffffff;
+    --background-secondary-alt: #ffffff;
+    --text-normal: #000000;
+    --text-muted: #333333;
+    --text-faint: #666666;
+    --h1-color: #000000;
+    --h2-color: #000000;
+    --h3-color: #000000;
+    --h4-color: #000000;
+    --h5-color: #000000;
+    --h6-color: #000000;
+    --inline-title-color: #000000;
+    --link-color: #000000;
+    --code-background: #f5f5f5;
+    --code-normal: #000000;
+  }
+
+  h1,
+  .inline-title,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    text-shadow: none !important;
+  }
+
+  body.hawkins-grain .workspace-leaf-content::before,
+  body.hawkins-grain .workspace-leaf-content::after {
+    display: none !important;
+  }
+}
+
+/* Respect reduced-motion preference: kill transitions/animations */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition-duration: 0.001ms !important;
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Mobile / touch: style :active (pressed) states since iPad has no hover */
+.is-mobile .clickable-icon:active,
+.is-mobile .nav-file-title:active,
+.is-mobile .nav-folder-title:active,
+.is-mobile .menu-item:active,
+.is-mobile .suggestion-item:active {
+  background-color: var(--nav-item-background-active);
+  color: var(--nav-item-color-active);
+}
+
+.is-mobile .tag:active {
+  background-color: var(--tag-background-hover);
+}
+
+.is-mobile input[type="checkbox"]:active {
+  border-color: var(--checkbox-color);
+}
