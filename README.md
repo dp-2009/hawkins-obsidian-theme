@@ -43,6 +43,13 @@ halos use a canvas `drop-shadow` filter (desktop only).
 
 Use one or the other, not both, to avoid double-applying the rules.
 
+## Demo
+
+`demo.md` in this repo exercises every element the theme styles —
+headings, callouts, tags, links (resolved/unresolved), tables, task
+lists, footnotes, and code. Drop it into your vault with Hawkins
+active to see the whole theme rendered in one note.
+
 ## Optional grain overlay
 
 `.hawkins-grain` is an opt-in scanline + vignette texture, off by
