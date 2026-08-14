@@ -463,6 +463,19 @@ body.theme-dark:not(.is-mobile) .workspace-leaf-content[data-type="localgraph"] 
   --callout-content-background: rgba(255, 255, 255, 0.015);
 }
 
+/* Explicit consumption of --callout-color — some Obsidian builds no longer
+   auto-apply this to border/icon, so state it directly rather than relying
+   on core CSS to do it. */
+.callout {
+  border-left-color: rgba(var(--callout-color), var(--callout-border-opacity, 1));
+  background-color: rgba(var(--callout-color), 0.1);
+}
+
+.callout .callout-icon svg,
+.callout .callout-title {
+  color: rgb(var(--callout-color));
+}
+
 /* ==========================================================================
    1c. HEADING GLOW (dark mode only) — h1 + inline-title ONLY
    ========================================================================== */
